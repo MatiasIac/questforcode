@@ -16,8 +16,97 @@
 	<script language="Javascript" src="framework/jsGFwkJukebox.js"></script>
 	<script language="Javascript" src="framework/jsGFwkEffects.js"></script>
 	
+	<script language="Javascript" src="scripts/environment.js"></script>
+	<script language="Javascript" src="scripts/player.js"></script>
+	
 	<body style="border:0px; margin:0px;
 		padding:0px; background-color: white;">
 		<canvas width="800" height="300" id="canvas"></canvas>
 	</body>
+	<script>
+		jsGFwk.settings.canvas = "canvas";
+		jsGFwk.settings.clearColor = "white";
+		jsGFwk.settings.frameRate = 1000 / 60;
+		
+		jsGFwk.include("FastAnimation");
+		jsGFwk.include("Container");
+		jsGFwk.include("IO");
+		jsGFwk.include("Collisions");
+		jsGFwk.include("ResourceManager");
+		jsGFwk.include("Sprites");
+		jsGFwk.include("Fonts");
+		jsGFwk.include("Scenes");
+		jsGFwk.include("Path");
+		
+		jsGFwk.ResourceManager.addGraphic({ name: "sprites", source: "images/sprites.png" });
+		
+		jsGFwk.createObject({
+			id: "progress",
+			visible: true,
+			barWidth: 0,
+			init: function() {
+				var self = this;
+				jsGFwk.ResourceManager.onResourcesLoadedCompleted = function() {
+					jsGFwk.Sprites.createSprite({id: "platform", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 123, left: 34, width: 743, height: 63});
+						
+					jsGFwk.Sprites.createSprite({id: "holder", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 258, left: 9, width: 36, height: 36});
+
+					jsGFwk.Sprites.createSprite({id: "key", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 262, left: 184, width: 23, height: 30});
+						
+					jsGFwk.Sprites.createSprite({id: "callout", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 214, left: 534, width: 203, height: 63});
+						
+					jsGFwk.Sprites.createSprite({id: "calloutEnd", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 14, left: 534, width: 203, height: 63});
+						
+					jsGFwk.Sprites.createSprite({id: "potion", 
+						graphic: jsGFwk.ResourceManager.graphics.sprites.image, 
+						top: 257, left: 432, width: 25, height: 32});
+						
+					jsGFwk.Sprites.createSpriteCollection("door", 
+						jsGFwk.ResourceManager.graphics.sprites.image, 
+						[{left: 344, top: 234, width: 32, height: 58},
+						 {left: 379, top: 234, width: 32, height: 58}]);
+					jsGFwk.Sprites.door.loop(false);
+					
+					jsGFwk.Sprites.createSpriteCollection("charRight", 
+						jsGFwk.ResourceManager.graphics.sprites.image, 
+						[{left: 229, top: 260, width: 22, height: 33},
+						 {left: 261, top: 260, width: 22, height: 33},
+						 {left: 293, top: 260, width: 22, height: 33}]);
+					jsGFwk.Sprites.charRight.loop(true);
+					
+					jsGFwk.Sprites.createSpriteCollection("charLeft", 
+						jsGFwk.ResourceManager.graphics.sprites.image, 
+						[{left: 293, top: 260, width: 22, height: 33, inverted: true},
+						 {left: 261, top: 260, width: 22, height: 33, inverted: true},
+						 {left: 229, top: 260, width: 22, height: 33, inverted: true}]);
+					jsGFwk.Sprites.charLeft.loop(true);
+					
+					jsGFwk.createObject(environment);
+					jsGFwk.createObject(player);
+					
+					self.destroy();
+				};
+			},
+			update: function(delta) { },
+			draw: function (context) { 
+				context.save();
+					context.fillStyle = "black";
+					context.fillText("Loading..." + parseInt((jsGFwk.ResourceManager._totalLoadedResources * 100) / jsGFwk.ResourceManager._totalResources) + "%"
+						, 30, 40);
+				context.restore();
+			}
+		});
+		
+		jsGFwk.start();
+	</script>
 </html>
